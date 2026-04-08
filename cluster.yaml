@@ -1,0 +1,33 @@
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  name: kubernetes-cluster-ekv2
+  namespace: kubecon-3ywqg
+spec:
+  clusterNetwork:
+    pods:
+      cidrBlocks:
+        - 192.168.156.0/20
+    services:
+      cidrBlocks:
+        - 10.96.0.0/12
+    serviceDomain: cluster.local
+  topology:
+    class: builtin-generic-v3.5.0
+    classNamespace: vmware-system-vks-public
+    version: v1.34.2---vmware.2-vkr.2
+    variables:
+      - name: vmClass
+        value: best-effort-xsmall
+      - name: storageClass
+        value: vcf-mgmt-cluster-optimal-datastore-default-policy-raid5
+    controlPlane:
+      replicas: 1
+      metadata:
+        annotations:
+          run.tanzu.vmware.com/resolve-os-image: os-name=photon, content-library=cl-07d746a1857d2250a
+    workers:
+      machineDeployments:
+        - class: node-pool
+          name: kubernetes-cluster-ekv2-np-onob
+          replicas: 1
